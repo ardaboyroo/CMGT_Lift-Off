@@ -57,7 +57,6 @@ namespace GXPEngine
             {
                 CalculateRotateCannon();
             }
-            Console.WriteLine(rotation);
         }
 
     }
