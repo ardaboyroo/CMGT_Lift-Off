@@ -4,11 +4,12 @@ using GXPEngine;
 
 namespace GXPEngine
 {
-    class Enemy : AnimationSprite
+    public class Enemy : AnimationSprite
     {
         Player player;
         private int moveSpeed = 1;
         public bool stopped = false;
+        public int lives = 1;
 
         public Enemy(Player player, string filename = "Assets/triangle.png", int columns = 1, int rows = 1) : base(filename, columns, rows)
         {
@@ -56,6 +57,14 @@ namespace GXPEngine
             else
             {
                 CalculateRotateCannon();
+            }
+
+            // Remove if 0 hp:
+            if (lives <= 0)
+            {
+                Destroy();
+                MyGame myGame = (MyGame)game;
+                myGame.enemies.Remove(this);
             }
         }
 

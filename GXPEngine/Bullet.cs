@@ -35,5 +35,32 @@ namespace GXPEngine
                 LateDestroy();
             }
         }
+
+        void OnCollision(GameObject other)
+        {
+            if (other is Player)
+            {
+                if (this.player is Player) { }
+
+                else
+                {
+                    Player player = (Player)other;
+                    player.lives--;
+                    LateDestroy();
+                }
+            }
+
+            if (other is Enemy)
+            {
+                if (this.player is Enemy) { }
+
+                else
+                {
+                    Enemy enemy = (Enemy)other;
+                    enemy.lives--;
+                    LateDestroy();
+                }
+            }
+        }
     }
 }

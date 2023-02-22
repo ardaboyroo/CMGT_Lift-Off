@@ -15,15 +15,18 @@ public class MyGame : Game
     private int currentScene = 0;
     private int timer = 0;
 
+    private int playerTimer = 0;
+    private int playerShootCooldown = 1000; // in ms
+
     private bool gameStarted = false;
 
     Terrain terrain;
     Player player;
     Enemy enemy;
+    public List<Enemy> enemies;
 
     public MyGame() : base((int)screenSize.x, (int)screenSize.y, false)     // Create a window that's 800x600 and NOT fullscreen
     {
-
         Init0();
     }
 
@@ -55,8 +58,11 @@ public class MyGame : Game
         player = new Player();
         AddChild(player);
         //player.AddChild(new Camera(0,0,1366,768));
+
+        enemies = new List<Enemy>();
         enemy = new Enemy(player);
         AddChild(enemy);
+        enemies.Add(enemy);
     }
 
     private void switchClick()
@@ -97,23 +103,31 @@ public class MyGame : Game
             return;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && playerTimer >= playerShootCooldown)
         {
+            playerTimer = 0;
             Shoot(player);
+            Console.WriteLine("Player Shot");
         }
 
-        if (enemy.stopped)
+        foreach (Enemy thisEnemy in enemies)
         {
-            if (timer > 1000)
+            if (thisEnemy.stopped)
             {
-                Shoot(enemy);
-                timer = 0;
-            }
-            else
-            {
-                timer += Time.deltaTime;
+                if (timer > 1000)
+                {
+                    Shoot(thisEnemy);
+                    timer = 0;
+                }
+                else
+                {
+                    timer += Time.deltaTime;
+                }
             }
         }
+
+        // Cooldown player shooting:
+        playerTimer += Time.deltaTime;
 
 
 
@@ -130,7 +144,7 @@ public class MyGame : Game
 
         //terrain.x += 100;
 
-        Console.WriteLine(y);
+        //Console.WriteLine(y);
 
     }
 
