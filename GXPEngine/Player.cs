@@ -53,6 +53,28 @@ namespace GXPEngine
             {
                 currentFrame = 0;
             }
+            
+            //Bounds for the player so it cannot go outside of the rocks
+            if (x <= 64 + width/2)
+            {
+                x = 64 + width/2;
+            }
+
+            if (y <= 64 + height / 2)
+            {
+                y = 64 + height / 2;
+            }
+
+            //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
+            if (x >= 24*64 - width / 2)
+            {
+                x = 24*64 - width / 2;
+            }
+            
+            if (y >= 14*64 - height / 2)
+            {
+                y = 14*64 - height / 2;
+            }
 
             lastRotation = ArduinoInput.rotationCounter;
 
