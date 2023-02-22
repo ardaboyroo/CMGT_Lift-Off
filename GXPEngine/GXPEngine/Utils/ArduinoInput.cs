@@ -7,7 +7,7 @@ namespace GXPEngine.GXPEngine.Utils
 
     class ArduinoInput
     {
-        bool isConnected = false;
+        public static bool isConnected = false;
 
         SerialPort port = new SerialPort();
         public static int rotationCounter = 0;

@@ -14,7 +14,7 @@ namespace GXPEngine
         public bool isAlive = true;
         public int lives = 1;
 
-        public Player(string filename = "Assets/barry.png", int columns = 7, int rows = 1) : base(filename, columns, rows)
+        public Player(string filename = "Assets/Player_Sprites.png", int columns = 7, int rows = 1) : base(filename, columns, rows)
         {
             SetOrigin(width / 2, height / 2);
             x = 1000;
@@ -27,22 +27,28 @@ namespace GXPEngine
             // Move the player based on its current rotation
             Move(0, -moveSpeed);
 
-            if (Input.GetKey(Key.A))
+            if (!ArduinoInput.isConnected)
             {
-                rotation -= rotationSpeed;
-            }
-            else if (Input.GetKey(Key.D))
-            {
-                rotation += rotationSpeed;
+                if (Input.GetKey(Key.A))
+                {
+                    rotation -= rotationSpeed;
+                }
+                else if (Input.GetKey(Key.D))
+                {
+                    rotation += rotationSpeed;
+                }
             }
 
-            if (lastRotation < ArduinoInput.rotationCounter)
+            if (ArduinoInput.isConnected)
             {
-                rotation += rotationSpeed;
-            }
-            else if (lastRotation > ArduinoInput.rotationCounter)
-            {
-                rotation -= rotationSpeed;
+                if (lastRotation < ArduinoInput.rotationCounter)
+                {
+                    rotation += rotationSpeed;
+                }
+                else if (lastRotation > ArduinoInput.rotationCounter)
+                {
+                    rotation -= rotationSpeed;
+                }
             }
 
             if (currentFrame < 6)
@@ -53,11 +59,11 @@ namespace GXPEngine
             {
                 currentFrame = 0;
             }
-            
+
             //Bounds for the player so it cannot go outside of the rocks
-            if (x <= 64 + width/2)
+            if (x <= 64 + width / 2)
             {
-                x = 64 + width/2;
+                x = 64 + width / 2;
             }
 
             if (y <= 64 + height / 2)
@@ -66,14 +72,14 @@ namespace GXPEngine
             }
 
             //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
-            if (x >= 24*64 - width / 2)
+            if (x >= 24 * 64 - width / 2)
             {
-                x = 24*64 - width / 2;
+                x = 24 * 64 - width / 2;
             }
-            
-            if (y >= 14*64 - height / 2)
+
+            if (y >= 14 * 64 - height / 2)
             {
-                y = 14*64 - height / 2;
+                y = 14 * 64 - height / 2;
             }
 
             lastRotation = ArduinoInput.rotationCounter;
