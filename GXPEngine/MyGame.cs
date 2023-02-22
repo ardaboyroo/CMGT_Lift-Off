@@ -8,7 +8,7 @@ using GXPEngine.Core;
 
 public class MyGame : Game
 {
-    ArduinoInput arduinoInput = new ArduinoInput(true);
+    ArduinoInput arduinoInput = new ArduinoInput();
     
     public static Vector2 screenSize = new Vector2(1366, 768);
 
@@ -17,6 +17,7 @@ public class MyGame : Game
 
     private bool gameStarted = false;
 
+    Terrain terrain;
     Player player;
     Enemy enemy;
 
@@ -47,10 +48,13 @@ public class MyGame : Game
 
         gameStarted = true;
 
-        
+        //terrain = new Terrain(width, height, 0, 64, Map.map, this);
+        //AddChild(terrain);
+        AddChild(new NewTerrain());
 
         player = new Player();
         AddChild(player);
+        //player.AddChild(new Camera(0,0,1366,768));
         enemy = new Enemy(player);
         AddChild(enemy);
     }
@@ -69,6 +73,7 @@ public class MyGame : Game
     // For every game object, Update is called every frame, by the engine:
     public void Update()
     {
+
         arduinoInput.update();
         /*
         scene 0
@@ -111,36 +116,27 @@ public class MyGame : Game
         }
 
 
+
+        //int[] terrainPos = terrain.UpdateTerrain((int)player.x, (int)player.y);
+        //terrain.SetXY(terrainPos[0], terrainPos[1]);
+
+        //Console.WriteLine(terrainPos[0]);
+
+        // change the entire game position s
+        x = -player.x + width / 2;
+        y = -player.y + height / 2;
+        //terrain.x = -x + terrainPos[0];
+        //terrain.y = -y + terrainPos[1];
+
+        //terrain.x += 100;
+
+        Console.WriteLine(y);
+
     }
 
 
     static void Main()                          // Main() is the first method that's called when the program is run
     {
-        /*
-        SerialPort port = new SerialPort();
-        port.PortName = "COM7";
-        port.BaudRate = 9600;
-        port.RtsEnable = true;
-        port.DtrEnable = true;
-        port.Open();
-        while (true)
-        {
-            string line = port.ReadLine(); // read separated values
-                                           //string line = port.ReadExisting(); // when using characters
-            if (line != "")
-            {
-                Console.WriteLine("Read from port: " + line);
-
-            }
-
-            if (Console.KeyAvailable)
-            {
-                ConsoleKeyInfo key = Console.ReadKey();
-                port.Write(key.KeyChar.ToString());  // writing a string to Arduino
-            }
-        }
-        */
         new MyGame().Start();                   // Create a "MyGame" and start it
-
     }
 }

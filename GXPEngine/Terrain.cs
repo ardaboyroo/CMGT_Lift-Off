@@ -1,113 +1,128 @@
-﻿//using GXPEngine.Managers;
-//using System;
-//using System.Collections.Generic;
-//using System.Drawing;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using GXPEngine;
-////using Terrain.NoiseGenerator;
+﻿using GXPEngine.Managers;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using GXPEngine;
+//using Terrain.NoiseGenerator;
 
-//namespace Terrain
-//{
+namespace GXPEngine
+{
 
-//    internal class DrawTerrain
-//    {
-//        AnimationSprite[,] terrain;
-//        public int[,] groundMap;
+    internal class Terrain : Pivot
+    {
+        AnimationSprite[,] terrain;
+        public int[,] groundMap;
 
-//        int tileWidth;
-//        int tileHeight;
+        int tileWidth;
+        int tileHeight;
 
-//        /// <summary>
-//        /// Includes all functions for drawing the terrain, and can return the mouse position on the grid.
-//        /// </summary>
+        int tileSize;
+
+        /// <summary>
+        /// Includes all functions for drawing the terrain, and can return the mouse position on the grid.
+        /// </summary>
 
 
-//        //for generating a new map
+        //for generating a new map
 
-//        public DrawTerrain(int camWidth, int camHeight, int mapSize, int gridSize)
-//        {
+        public Terrain(int camWidth, int camHeight, int mapSize, int gridSize)
+        {
 
-//            //tile width and height are slightly larger than the screen to avoid nullpointerexceptions and flickering edges
-//            tileWidth = (camWidth / gridSize) + 3;
-//            tileHeight = (camHeight / gridSize) + 3;
+            //tile width and height are slightly larger than the screen to avoid nullpointerexceptions and flickering edges
+            tileWidth = (camWidth / gridSize) + 3;
+            tileHeight = (camHeight / gridSize) + 3;
 
-//            terrain = new AnimationSprite[tileWidth, tileHeight];
+            terrain = new AnimationSprite[tileWidth, tileHeight];
 
-//            //sets up an array for all sprites
-//            for (int x = 0; x < tileWidth; x++)
-//            {
-//                for (int y = 0; y < tileHeight; y++)
-//                {
-//                    //NO COLLISION
-//                    terrain[x, y] = new AnimationSprite("groundTiles.png", 8, 4, -1, false, false);
-//                    terrain[x, y].SetXY(x * gridSize - gridSize / 2, y * gridSize - gridSize / 2);
-//                    terrain[x, y].scale = gridSize / 16f;
-//                }
-//            }
-//        }
+            this.tileSize = gridSize;
 
-//        //for loading the map from a two dimensional array, for use in for example loading a file or pregenerating in a different class
+            //sets up an array for all sprites
+            for (int x = 0; x < tileWidth; x++)
+            {
+                for (int y = 0; y < tileHeight; y++)
+                {
+                    terrain[x, y] = new AnimationSprite("Assets/Sea_Tiles.png", 3, 1, -1, false, true);
+                    terrain[x, y].SetXY(x * gridSize - gridSize / 2, y * gridSize - gridSize / 2);
+                    terrain[x, y].scale = gridSize / 16f;
+                }
+            }
+        }
 
-//        public DrawTerrain(int camWidth, int camHeight, int mapSize, int gridSize, int[,] groundMap)
-//        {
-//            //tile width and height are slightly larger than the screen to avoid nullpointerexceptions and flickering edges
-//            tileWidth = (camWidth / gridSize) + 3;
-//            tileHeight = (camHeight / gridSize) + 3;
+        //for loading the map from a two dimensional array, for use in for example loading a file or pregenerating in a different class
 
-//            terrain = new AnimationSprite[tileWidth, tileHeight];
+        public Terrain(int camWidth, int camHeight, int mapSize, int tileSize, int[,] groundMap, MyGame main)
+        {
+            //tile width and height are slightly larger than the screen to avoid nullpointerexceptions and flickering edges
+            tileWidth = (camWidth / tileSize) + 3;
+            tileHeight = (camHeight / tileSize) + 3;
 
-//            //loads in saved maps
-//            this.groundMap = groundMap;
+            terrain = new AnimationSprite[tileWidth, tileHeight];
 
-//            //and sets up an array for all sprites
-//            for (int x = 0; x < tileWidth; x++)
-//            {
-//                for (int y = 0; y < tileHeight; y++)
-//                {
-//                    terrain[x, y] = new AnimationSprite("Assets/groundTiles.png", 8, 4, -1, false, false);
-//                    terrain[x, y].SetXY(x * gridSize - gridSize / 2, y * gridSize - gridSize / 2);
-//                    terrain[x, y].scale = gridSize / 16f;
-//                }
-//            }
-//        }
+            //loads in saved maps
+            this.groundMap = groundMap;
 
-//        public AnimationSprite[,] ReturnTerrain()
-//        {
-//            return terrain;
-//        }
+            this.tileSize = tileSize;
 
-//        public int[] UpdateTerrain()
-//        {
 
-//            //updates all terrain based on the camera position after checking which tile is in the top left
+            //// Random map generation, replace with int array
+            //this.groundMap = new int[mapSize,mapSize];
+            //for(int x = 0; x < mapSize; x++)
+            //{
+            //    for (int y = 0; y < mapSize; y++)
+            //    {
+            //        this.groundMap[x,y] = Utils.Random(0,3);
+            //    }
+            //}
 
-//            int leftTile = camX / gridSize;
-//            int topTile = camY / gridSize;
+            //and sets up an array for all sprites
+            for (int x = 0; x < tileWidth; x++)
+            {
+                for (int y = 0; y < tileHeight; y++)
+                {
+                    terrain[x, y] = new AnimationSprite("Assets/Sea_Tiles.png", 3, 1, -1, false, false);
+                    terrain[x, y].SetXY(x * tileSize - tileSize / 2, y * tileSize - tileSize / 2);
+                    terrain[x, y].scale = tileSize / 64f;
+                    //foreach (AnimationSprite i in terrain)
+                    //{
+                    //    Console.WriteLine(i.ToString());
+                    //}
+                    AddChild(terrain[x, y]);
+                }
+            }
+        }
 
-//            //and returns the X and Y of the origin offset, which is kept within one tile
-//            int[] origin = new int[] { -(camX % gridSize), -(camY % gridSize) };
+        public AnimationSprite[,] ReturnTerrain()
+        {
+            return terrain;
+        }
 
-//            for (int x = 0; x < tileWidth; x++)
-//            {
-//                for (int y = 0; y < tileHeight; y++)
-//                {
-//                    resources[x, y].currentFrame = resourceMap[leftTile + x, topTile + y];
+        public int[] UpdateTerrain(int camX, int camY)
+        {
 
-//                    terrain[x, y].currentFrame = groundMap[leftTile + x, topTile + y] + 8 * terrainRandomness[leftTile + x, topTile + y];
-//                }
-//            }
+            //updates all terrain based on the camera position after checking which tile is in the top left
 
-//            return origin;
-//        }
+            int leftTile = camX / tileSize;
+            int topTile = camY / tileSize;
 
-//        public int[] mouseHoverPoint(int camX, int camY)
-//        {
-//            int mouseTileX = (camX + Input.mouseX + (gridSize / 2)) / gridSize;
-//            int mouseTileY = (camY + Input.mouseY + (gridSize / 2)) / gridSize;
+            //and returns the X and Y of the origin offset, which is kept within one tile
+            int[] origin = new int[] { -(camX % tileSize), -(camY % tileSize) };
 
-//            return new int[] { mouseTileX, mouseTileY };
-//        }
-//    }
-//}
+            for (int x = 0; x < tileWidth; x++)
+            {
+                for (int y = 0; y < tileHeight; y++)
+                {
+                    //terrain[x, y].currentFrame = groundMap[leftTile + x, topTile + y];
+                    //Console.WriteLine(terrain[x, y].currentFrame);
+                }
+            }
+
+            x = origin[0];
+            y = origin[1];
+
+            return origin;
+        }
+    }
+}

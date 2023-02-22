@@ -12,9 +12,8 @@ namespace GXPEngine.GXPEngine.Utils
         SerialPort port = new SerialPort();
         public static int rotationCounter = 0;
 
-        public ArduinoInput(bool connected)
+        public ArduinoInput()
         {
-            isConnected = connected;
             if (isConnected)
             {
                 port.PortName = "COM7";

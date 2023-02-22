@@ -9,14 +9,14 @@ namespace GXPEngine
     class Player : AnimationSprite
     {
         private int moveSpeed = 3;          // in pixels per frame
-        private int rotationSpeed = 6;      // negative for reversed rotation, positive for normal
+        private int rotationSpeed = 5;      // negative for reversed rotation, positive for normal
         private int lastRotation = 0;
 
         public Player(string filename = "Assets/barry.png", int columns = 7, int rows = 1) : base(filename, columns, rows)
         {
             SetOrigin(width / 2, height / 2);
-            x = 500;
-            y = 500;
+            x = 1000;
+            y = 600;
         }
 
 
@@ -25,14 +25,14 @@ namespace GXPEngine
             // Move the player based on its current rotation
             Move(0, -moveSpeed);
 
-            //if (Input.GetKey(Key.A))
-            //{
-            //    rotation -= rotationSpeed;
-            //}
-            //else if (Input.GetKey(Key.D))
-            //{
-            //    rotation += rotationSpeed;
-            //}
+            if (Input.GetKey(Key.A))
+            {
+                rotation -= rotationSpeed;
+            }
+            else if (Input.GetKey(Key.D))
+            {
+                rotation += rotationSpeed;
+            }
 
             if (lastRotation < ArduinoInput.rotationCounter)
             {
