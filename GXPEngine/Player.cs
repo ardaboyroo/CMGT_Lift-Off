@@ -13,6 +13,10 @@ namespace GXPEngine
         private int lastRotation = 0;
         public bool isAlive = true;
         public int lives = 1;
+        private int[,] map;
+        private MyGame _myGame;
+        private float boostTimer = 5;
+        private float time = 0;
 
         public Player(string filename = "Assets/Player_Sprites.png", int columns = 16, int rows = 1) : base(filename, columns, rows)
         {
@@ -20,6 +24,8 @@ namespace GXPEngine
             scale = 0.5f;
             x = 1000;
             y = 600;
+            _myGame = (MyGame)game;
+            map = _myGame.GetMap();
         }
 
 
@@ -29,7 +35,7 @@ namespace GXPEngine
             Move(0, -moveSpeed);
 
             if (!ArduinoInput.isConnected)
-            {
+            // {
                 if (Input.GetKey(Key.A))
                 {
                     rotation -= rotationSpeed;
@@ -38,8 +44,8 @@ namespace GXPEngine
                 {
                     rotation += rotationSpeed;
                 }
-            }
-
+            // }
+            //
             if (ArduinoInput.isConnected)
             {
                 if (lastRotation < ArduinoInput.rotationCounter)
@@ -62,26 +68,48 @@ namespace GXPEngine
             //}
 
             //Bounds for the player so it cannot go outside of the rocks
-            if (x <= 64 + width / 2)
+            if (x <= width / 2)
             {
-                x = 64 + width / 2;
+                x = width / 2;
             }
 
-            if (y <= 64 + height / 2)
+            if (y <= height / 2 - 10)
             {
-                y = 64 + height / 2;
+                y = height / 2 - 10;
             }
             
             //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
-            if (x >= 24 * 64 - width / 2)
+            if (x >= 25 * 64 - width / 2)
             {
-                x = 24 * 64 - width / 2;
+                x = 25 * 64 - width / 2;
             }
 
-            if (y >= 14 * 64 - height / 2)
+            if (y >= 15 * 64 - height / 2 + 10)
             {
-                y = 14 * 64 - height / 2;
+                y = 15 * 64 - height / 2 + 10;
             }
+
+            if (map != null)
+            {
+                //Console.WriteLine(map[(int)x/64, (int)y/64]);
+                // Console.WriteLine((int)x/64 + " : " + (int)y/64);
+                // Console.WriteLine(map[9,15]);           //first y than x
+
+                if (map[(int)y / 64, (int)x / 64] == 1)
+                {
+                    moveSpeed = 4;
+                }
+                else if (map[(int)y / 64, (int)x / 64] == 2)
+                {
+                    moveSpeed = 1;
+                }
+                else
+                {
+                    moveSpeed = 3;
+                }
+            }
+            
+            
 
             lastRotation = ArduinoInput.rotationCounter;
 
