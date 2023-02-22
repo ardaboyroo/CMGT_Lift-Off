@@ -9,7 +9,7 @@ using GXPEngine.Core;
 public class MyGame : Game
 {
     ArduinoInput arduinoInput = new ArduinoInput();
-    
+
     public static Vector2 screenSize = new Vector2(1366, 768);
 
     private int currentScene = 0;
@@ -40,11 +40,13 @@ public class MyGame : Game
         }
     }
 
+    // Start menu
     private void Init0()
     {
-
+        AddChild(new Sprite("Assets/Start_Menu_Background.png"));
     }
 
+    // Main game
     private void Init1()
     {
         DestroyAll();
@@ -65,9 +67,28 @@ public class MyGame : Game
         enemies.Add(enemy);
     }
 
+    // Restart scene
+    private void Init2()
+    {
+
+    }
+
     private void switchClick()
     {
-        if (Input.GetMouseButtonDown(0)) { currentScene = 1; }
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Start menu
+            if (currentScene == 0)
+            {
+                currentScene = 1;
+            }
+
+            // Restart screen
+            if (currentScene == 2)
+            {
+                currentScene = 1;
+            }
+        }
     }
 
     private void Shoot(GameObject obj)
@@ -82,7 +103,23 @@ public class MyGame : Game
 
         arduinoInput.update();
         /*
-        scene 0
+        
+        scene 0:
+            Start menu
+                Title
+                Play button
+
+        scene 1:
+            Main game
+                Map
+                player and enemies
+                Current score
+
+        scene 2:
+            Restart menu
+                High score
+                Current score
+                Restart button
             
         */
         switch (currentScene)
