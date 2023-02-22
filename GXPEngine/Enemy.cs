@@ -7,14 +7,23 @@ namespace GXPEngine
     public class Enemy : AnimationSprite
     {
         Player player;
+        private EnemySpawner _enemySpawner;
         private int moveSpeed = 1;
         public bool stopped = false;
         public int lives = 1;
+        private bool dead = false;
+        private int timer = 0;
 
-        public Enemy(Player player, string filename = "Assets/triangle.png", int columns = 1, int rows = 1) : base(filename, columns, rows)
+        public Enemy(Player player, int x, int y, string filename = "Assets/triangle.png", int columns = 1, int rows = 1) : base(filename, columns, rows)
         {
+            this.x = x;
+            this.y = y;
             SetOrigin(width / 2, height / 2);
             this.player = player;
+            _enemySpawner = new EnemySpawner(player);
+            MyGame myGame = (MyGame)game;
+            myGame.enemies.Add(this);
+            Console.WriteLine("Spawned at: " + x + " : " + y);
         }
 
         private void CalculateRotation()
@@ -58,15 +67,22 @@ namespace GXPEngine
             {
                 CalculateRotateCannon();
             }
+            
+
+            if (Input.GetKey(Key.K))
+            {
+                lives = 0;
+            }
 
             // Remove if 0 hp:
             if (lives <= 0)
             {
-                Destroy();
                 MyGame myGame = (MyGame)game;
                 myGame.enemies.Remove(this);
+                LateDestroy();
             }
-        }
 
+            
+        }
     }
 }
