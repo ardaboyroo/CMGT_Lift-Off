@@ -166,23 +166,20 @@ public class MyGame : Game
         // Cooldown player shooting:
         playerTimer += Time.deltaTime;
 
+        // change the map position so the player stays in the middle
+        x = -player.x + width / 2;
+        y = -player.y + height / 2;
 
 
+        /*
         //int[] terrainPos = terrain.UpdateTerrain((int)player.x, (int)player.y);
         //terrain.SetXY(terrainPos[0], terrainPos[1]);
 
-        //Console.WriteLine(terrainPos[0]);
-
-        // change the entire game position s
-        x = -player.x + width / 2;
-        y = -player.y + height / 2;
         //terrain.x = -x + terrainPos[0];
         //terrain.y = -y + terrainPos[1];
 
         //terrain.x += 100;
-
-        //Console.WriteLine(y);
-
+        */
     }
 
 

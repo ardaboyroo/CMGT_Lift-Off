@@ -11,6 +11,7 @@ namespace GXPEngine
         private int moveSpeed = 3;          // in pixels per frame
         private int rotationSpeed = 5;      // negative for reversed rotation, positive for normal
         private int lastRotation = 0;
+        public bool isAlive = true;
         public int lives = 1;
 
         public Player(string filename = "Assets/barry.png", int columns = 7, int rows = 1) : base(filename, columns, rows)
@@ -58,7 +59,7 @@ namespace GXPEngine
             // Lose game:
             if (lives <= 0)
             {
-                // Lose Game:
+                isAlive = false;
             }
         }
 
