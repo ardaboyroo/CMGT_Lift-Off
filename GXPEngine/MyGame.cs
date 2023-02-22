@@ -21,7 +21,7 @@ public class MyGame : Game
 
     private bool gameStarted = false;
 
-    Player player;
+    public Player player;
     NewTerrain terrain;
     EnemySpawner enemySpawner;
     public List<Enemy> enemies;
@@ -56,6 +56,7 @@ public class MyGame : Game
         DestroyAll();
 
         AddChild(new Sprite("Assets/Start_Menu_Background.png"));
+        AddChild(new HUD(currentScene));
     }
 
     // Main game
@@ -77,8 +78,10 @@ public class MyGame : Game
         enemies = new List<Enemy>();
         //enemy = new Enemy(player);
         enemySpawner = new EnemySpawner(player);
-        //AddChild(enemySpawner);
+        AddChild(enemySpawner);
         //enemies.Add(enemy);
+
+        AddChild(new HUD(currentScene));
     }
 
     // Restart scene
@@ -87,6 +90,8 @@ public class MyGame : Game
         DestroyAll();
 
         gameStarted = false;
+
+        AddChild(new HUD(currentScene));
     }
 
     private void switchClick()
