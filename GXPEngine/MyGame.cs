@@ -23,6 +23,7 @@ public class MyGame : Game
     Terrain terrain;
     Player player;
     Enemy enemy;
+    EnemySpawner enemySpawner;
     public List<Enemy> enemies;
 
     public MyGame() : base((int)screenSize.x, (int)screenSize.y, false)     // Create a window that's 800x600 and NOT fullscreen
@@ -62,9 +63,10 @@ public class MyGame : Game
         //player.AddChild(new Camera(0,0,1366,768));
 
         enemies = new List<Enemy>();
-        enemy = new Enemy(player);
-        AddChild(enemy);
-        enemies.Add(enemy);
+        //enemy = new Enemy(player);
+        enemySpawner = new EnemySpawner(player);
+        AddChild(enemySpawner);
+        //enemies.Add(enemy);
     }
 
     // Restart scene
