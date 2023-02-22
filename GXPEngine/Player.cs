@@ -14,9 +14,10 @@ namespace GXPEngine
         public bool isAlive = true;
         public int lives = 1;
 
-        public Player(string filename = "Assets/Player_Sprites.png", int columns = 7, int rows = 1) : base(filename, columns, rows)
+        public Player(string filename = "Assets/Player_Sprites.png", int columns = 16, int rows = 1) : base(filename, columns, rows)
         {
             SetOrigin(width / 2, height / 2);
+            scale = 0.5f;
             x = 1000;
             y = 600;
         }
@@ -51,14 +52,14 @@ namespace GXPEngine
                 }
             }
 
-            if (currentFrame < 6)
-            {
-                currentFrame++;
-            }
-            else
-            {
-                currentFrame = 0;
-            }
+            //if (currentFrame < 6)
+            //{
+            //    currentFrame++;
+            //}
+            //else
+            //{
+            //    currentFrame = 0;
+            //}
 
             //Bounds for the player so it cannot go outside of the rocks
             if (x <= 64 + width / 2)
@@ -70,7 +71,7 @@ namespace GXPEngine
             {
                 y = 64 + height / 2;
             }
-
+            
             //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
             if (x >= 24 * 64 - width / 2)
             {

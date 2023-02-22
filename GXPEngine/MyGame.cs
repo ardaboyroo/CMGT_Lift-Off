@@ -38,11 +38,17 @@ public class MyGame : Game
         {
             child.Destroy();
         }
+
+        // Resets camera position
+        x = 0;
+        y = 0;
     }
 
     // Start menu
     private void Init0()
     {
+        DestroyAll();
+
         AddChild(new Sprite("Assets/Start_Menu_Background.png"));
     }
 
@@ -70,7 +76,9 @@ public class MyGame : Game
     // Restart scene
     private void Init2()
     {
+        DestroyAll();
 
+        gameStarted = false;
     }
 
     private void switchClick()
@@ -100,7 +108,7 @@ public class MyGame : Game
     // For every game object, Update is called every frame, by the engine:
     public void Update()
     {
-
+        Console.WriteLine("scene: {0} gamestarted: {1}", currentScene, gameStarted);
         arduinoInput.update();
         /*
         
@@ -125,6 +133,7 @@ public class MyGame : Game
         switch (currentScene)
         {
             case 0:
+                Init0();
                 switchClick();
                 break;
             case 1:
@@ -133,11 +142,23 @@ public class MyGame : Game
                     Init1();
                 }
                 break;
+            case 2:
+                if (gameStarted)
+                {
+                    Init2();
+                }
+                switchClick();
+                break;
         }
 
         if (!gameStarted)
         {
             return;
+        }
+
+        if (!player.isAlive)
+        {
+            currentScene = 2;
         }
 
         if (Input.GetMouseButtonDown(0) && playerTimer >= playerShootCooldown)
@@ -166,7 +187,7 @@ public class MyGame : Game
         // Cooldown player shooting:
         playerTimer += Time.deltaTime;
 
-        // change the map position so the player stays in the middle
+        // This changes the map position so the player stays in the middle
         x = -player.x + width / 2;
         y = -player.y + height / 2;
 
