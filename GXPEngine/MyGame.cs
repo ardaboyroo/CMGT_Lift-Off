@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using GXPEngine.GXPEngine.Utils;
 using GXPEngine.Core;
+using TiledMapParser;
 
 public class MyGame : Game
 {
@@ -20,15 +21,19 @@ public class MyGame : Game
 
     private bool gameStarted = false;
 
-    Terrain terrain;
     Player player;
-    Enemy enemy;
+    NewTerrain terrain;
     EnemySpawner enemySpawner;
     public List<Enemy> enemies;
 
     public MyGame() : base((int)screenSize.x, (int)screenSize.y, false)     // Create a window that's 800x600 and NOT fullscreen
     {
         Init0();
+    }
+
+    public int[,] GetMap()
+    {
+        return terrain.map;
     }
 
     private void DestroyAll()
@@ -62,7 +67,8 @@ public class MyGame : Game
 
         //terrain = new Terrain(width, height, 0, 64, Map.map, this);
         //AddChild(terrain);
-        AddChild(new NewTerrain());
+        terrain = new NewTerrain();
+        AddChild(terrain);
 
         player = new Player();
         AddChild(player);
@@ -71,7 +77,7 @@ public class MyGame : Game
         enemies = new List<Enemy>();
         //enemy = new Enemy(player);
         enemySpawner = new EnemySpawner(player);
-        AddChild(enemySpawner);
+        //AddChild(enemySpawner);
         //enemies.Add(enemy);
     }
 
@@ -110,7 +116,6 @@ public class MyGame : Game
     // For every game object, Update is called every frame, by the engine:
     public void Update()
     {
-        Console.WriteLine("scene: {0} gamestarted: {1}", currentScene, gameStarted);
         arduinoInput.update();
         /*
         
