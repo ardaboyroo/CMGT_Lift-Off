@@ -9,7 +9,7 @@ namespace GXPEngine
 {
     class NewTerrain : Pivot
     {
-        int[,] map;
+        public int[,] map;
         //make map here
 
         const int mapWidth = 15;

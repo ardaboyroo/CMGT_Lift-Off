@@ -3,20 +3,22 @@ using GXPEngine.Managers;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace GXPEngine
 {
     public class Player : AnimationSprite
     {
         private int moveSpeed = 3;          // in pixels per frame
+        private int boostSpeed = 5;         // speed for when the player touches the wave tile
         private int rotationSpeed = 5;      // negative for reversed rotation, positive for normal
         private int lastRotation = 0;
         public bool isAlive = true;
         public int lives = 1;
         private int[,] map;
         private MyGame _myGame;
-        private float boostTimer = 5;
-        private float time = 0;
+        private float boostTimer = 1000;
+        private float time;
 
         public Player(string filename = "Assets/Player_Sprites.png", int columns = 16, int rows = 1) : base(filename, columns, rows)
         {
@@ -26,8 +28,20 @@ namespace GXPEngine
             y = 600;
             _myGame = (MyGame)game;
             map = _myGame.GetMap();
+            time = boostTimer;
         }
 
+
+        private void CheckSpeedBoost()
+        {
+            Console.WriteLine(moveSpeed);
+            if (time < boostTimer)
+            {
+                moveSpeed = boostSpeed;
+
+            }
+            time += Time.deltaTime;
+        }
 
         public void Update()
         {
@@ -35,7 +49,7 @@ namespace GXPEngine
             Move(0, -moveSpeed);
 
             if (!ArduinoInput.isConnected)
-            // {
+            {
                 if (Input.GetKey(Key.A))
                 {
                     rotation -= rotationSpeed;
@@ -44,8 +58,8 @@ namespace GXPEngine
                 {
                     rotation += rotationSpeed;
                 }
-            // }
-            //
+            }
+
             if (ArduinoInput.isConnected)
             {
                 if (lastRotation < ArduinoInput.rotationCounter)
@@ -77,7 +91,7 @@ namespace GXPEngine
             {
                 y = height / 2 - 10;
             }
-            
+
             //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
             if (x >= 25 * 64 - width / 2)
             {
@@ -97,7 +111,7 @@ namespace GXPEngine
 
                 if (map[(int)y / 64, (int)x / 64] == 1)
                 {
-                    moveSpeed = 4;
+                    time = 0;
                 }
                 else if (map[(int)y / 64, (int)x / 64] == 2)
                 {
@@ -108,8 +122,9 @@ namespace GXPEngine
                     moveSpeed = 3;
                 }
             }
-            
-            
+
+            CheckSpeedBoost();
+
 
             lastRotation = ArduinoInput.rotationCounter;
 

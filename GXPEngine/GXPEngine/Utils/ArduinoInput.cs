@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Threading;
 namespace GXPEngine.GXPEngine.Utils
 {
 
     class ArduinoInput
     {
         public static bool isConnected = false;
+        public static int rotationCounter = 0;
 
         SerialPort port = new SerialPort();
-        public static int rotationCounter = 0;
 
         public ArduinoInput()
         {
@@ -32,7 +30,7 @@ namespace GXPEngine.GXPEngine.Utils
                                                    //string line = port.ReadExisting(); // when using characters
                 if (line != "")
                 {
-                    if (Int32.TryParse(line, out _))
+                    if (int.TryParse(line, out _))
                     {
                         rotationCounter = int.Parse(line);
                     }
