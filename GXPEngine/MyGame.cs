@@ -18,15 +18,20 @@ public class MyGame : Game
 
     public int score = 0;
 
+    private int selected = 0;
+
     public int currentScene = 0;
     private int timer = 0;
 
     private int playerTimer = 0;
     private int playerShootCooldown = 1000; // in ms
+    private int lastRotation = 0;
 
     private Sound cannonSFX;
     private Sound menuMusic;
     public Sound shipSinking;
+
+    private HUD hud;
 
     private bool gameStarted = false;
     private bool init0 = false;
@@ -102,7 +107,8 @@ public class MyGame : Game
 
         gameStarted = false;
 
-        AddChild(new HUD(currentScene));
+        hud = new HUD(currentScene);
+        AddChild(hud);
         score = 0;
     }
 
@@ -119,7 +125,14 @@ public class MyGame : Game
             // Restart screen
             if (currentScene == 2)
             {
-                currentScene = 1;
+                if (selected == 1)
+                {
+                    currentScene = 1;
+                }
+                if (selected == 2)
+                {
+                    currentScene = 0;
+                }
             }
         }
     }
@@ -185,6 +198,35 @@ public class MyGame : Game
                 switchClick();
                 break;
         }
+
+        if (currentScene == 2)
+        {
+            if (ArduinoInput.isConnected)
+            {
+                if (lastRotation < ArduinoInput.rotationCounter)
+                {
+                    hud.background.currentFrame = 2;
+                    selected = 2;
+                }
+                else if (lastRotation > ArduinoInput.rotationCounter)
+                {
+                    hud.background.currentFrame = 1;
+                    selected = 1;
+                }
+
+            }
+            if (Input.GetKeyDown(Key.D))
+            {
+                hud.background.currentFrame = 2;
+                selected = 2;
+            }
+            else if (Input.GetKeyDown(Key.A))
+            {
+                hud.background.currentFrame = 1;
+                selected = 1;
+            }
+        }
+        lastRotation = ArduinoInput.rotationCounter;
 
         if (!gameStarted)
         {

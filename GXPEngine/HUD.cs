@@ -17,7 +17,7 @@ namespace GXPEngine
         StreamWriter writer;
         StreamReader reader;
         MyGame mygame;
-        AnimationSprite background;
+        public AnimationSprite background;
 
         public HUD(int CASE)
         {

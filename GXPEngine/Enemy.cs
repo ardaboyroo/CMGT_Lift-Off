@@ -62,10 +62,8 @@ namespace GXPEngine
         {
             if (dead)
             {
-                Console.WriteLine("returned");
                 return;
             }
-            Console.WriteLine("or not");
             if (shot)
             {
                 if (timer > 400)
