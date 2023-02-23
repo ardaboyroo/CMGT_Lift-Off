@@ -293,10 +293,5 @@ namespace GXPEngine
 		}
 
 	}
-
-	//legacy, sorry Hans
-	public class AnimSprite : AnimationSprite {
-		public AnimSprite (string filename, int cols, int rows, int frames=-1) : base(filename, cols, rows, frames) {}
-	};
 }
 

@@ -15,14 +15,16 @@ namespace GXPEngine
         private int lastRotation = 0;
         public bool isAlive = true;
         public int lives = 1;
+        public bool shot = false;
         private int[,] map;
         private MyGame _myGame;
         private float boostTimer = 1000;
         private float time;
 
-        public Player(string filename = "Assets/Player_Sprites.png", int columns = 16, int rows = 1) : base(filename, columns, rows)
+        public Player(string filename = "Assets/Player_Sprites.png", int columns = 17, int rows = 1) : base(filename, columns, rows)
         {
             SetOrigin(width / 2, height / 2);
+            SetCycle(1, 8);
             scale = 0.5f;
             x = 1000;
             y = 600;
@@ -34,7 +36,6 @@ namespace GXPEngine
 
         private void CheckSpeedBoost()
         {
-            Console.WriteLine(moveSpeed);
             if (time < boostTimer)
             {
                 moveSpeed = boostSpeed;
@@ -43,10 +44,34 @@ namespace GXPEngine
             time += Time.deltaTime;
         }
 
+        public void CannonAnim()
+        {
+            if (shot)
+            {
+                Animate();
+                shot = false;
+
+                //if (currentFrame != 8)
+                //{
+                //    currentFrame++;
+                //}
+                //else
+                //{
+                //    currentFrame = 0;
+                //    shot = false;
+                //}
+            }
+        }
+
+        private bool PlayerDeathAnim()
+        {
+            return true;
+        }
         public void Update()
         {
             // Move the player based on its current rotation
             Move(0, -moveSpeed);
+            CannonAnim();
 
             if (!ArduinoInput.isConnected)
             {
@@ -93,14 +118,14 @@ namespace GXPEngine
             }
 
             //24 and 14 are taken from the New Terrain (btw I think you have naming mapHeight and mapWidth mixed)
-            if (x >= 25 * 64 - width / 2)
+            if (x >= 50 * 64 - width / 2)
             {
-                x = 25 * 64 - width / 2;
+                x = 50 * 64 - width / 2;
             }
 
-            if (y >= 15 * 64 - height / 2 + 10)
+            if (y >= 25 * 64 - height / 2 + 10)
             {
-                y = 15 * 64 - height / 2 + 10;
+                y = 25 * 64 - height / 2 + 10;
             }
 
             if (map != null)

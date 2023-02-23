@@ -9,8 +9,8 @@ namespace GXPEngine
     public class EnemySpawner : GameObject
     {
         private List<Enemy> _enemies = new List<Enemy>();
-        private int mapWidth = 24 * 64;
-        private int mapHeight = 14 * 64;
+        private int mapWidth = 49 * 64;
+        private int mapHeight = 24 * 64;
         private Random rand = new Random();
         private Player player;
 

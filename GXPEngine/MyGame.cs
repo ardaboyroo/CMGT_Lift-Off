@@ -9,11 +9,15 @@ using TiledMapParser;
 
 public class MyGame : Game
 {
+    private int enemyBulletSpeed = 5; 
+
     ArduinoInput arduinoInput = new ArduinoInput();
 
     public static Vector2 screenSize = new Vector2(1366, 768);
 
-    private int currentScene = 0;
+    public int score = 0;
+
+    public int currentScene = 0;
     private int timer = 0;
 
     private int playerTimer = 0;
@@ -66,20 +70,15 @@ public class MyGame : Game
 
         gameStarted = true;
 
-        //terrain = new Terrain(width, height, 0, 64, Map.map, this);
-        //AddChild(terrain);
         terrain = new NewTerrain();
         AddChild(terrain);
 
         player = new Player();
         AddChild(player);
-        //player.AddChild(new Camera(0,0,1366,768));
 
         enemies = new List<Enemy>();
-        //enemy = new Enemy(player);
         enemySpawner = new EnemySpawner(player);
         AddChild(enemySpawner);
-        //enemies.Add(enemy);
 
         AddChild(new HUD(currentScene));
     }
@@ -92,11 +91,12 @@ public class MyGame : Game
         gameStarted = false;
 
         AddChild(new HUD(currentScene));
+        score = 0;
     }
 
     private void switchClick()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(Key.F))
         {
             // Start menu
             if (currentScene == 0)
@@ -112,10 +112,10 @@ public class MyGame : Game
         }
     }
 
-    private void Shoot(GameObject obj)
+    private void Shoot(GameObject obj, int bulletSpeed = 10)
     {
-        AddChild(new Bullet(obj, -1));
-        AddChild(new Bullet(obj, 1));
+        AddChild(new Bullet(obj, -1, bulletSpeed));
+        AddChild(new Bullet(obj, 1, bulletSpeed));
     }
 
     // For every game object, Update is called every frame, by the engine:
@@ -173,11 +173,11 @@ public class MyGame : Game
             currentScene = 2;
         }
 
-        if (Input.GetMouseButtonDown(0) && playerTimer >= playerShootCooldown)
+        if (Input.GetKeyDown(Key.F) && playerTimer >= playerShootCooldown)
         {
             playerTimer = 0;
+            player.shot = true;
             Shoot(player);
-            Console.WriteLine("Player Shot");
         }
 
         foreach (Enemy thisEnemy in enemies)
@@ -186,7 +186,7 @@ public class MyGame : Game
             {
                 if (timer > 1000)
                 {
-                    Shoot(thisEnemy);
+                    Shoot(thisEnemy, enemyBulletSpeed);
                     timer = 0;
                 }
                 else

@@ -14,16 +14,17 @@ namespace GXPEngine
         private bool dead = false;
         private int timer = 0;
 
-        public Enemy(Player player, int x, int y, string filename = "Assets/triangle.png", int columns = 1, int rows = 1) : base(filename, columns, rows)
+        public Enemy(Player player, int x, int y, string filename = "Assets/smallship.png", int columns = 17, int rows = 1) : base(filename, columns, rows)
         {
             this.x = x;
             this.y = y;
+            scale = 0.7f;
             SetOrigin(width / 2, height / 2);
             this.player = player;
             _enemySpawner = new EnemySpawner(player);
             MyGame myGame = (MyGame)game;
             myGame.enemies.Add(this);
-            Console.WriteLine("Spawned at: " + x + " : " + y);
+            //Console.WriteLine("Spawned at: " + x + " : " + y);
         }
 
         private void CalculateRotation()
@@ -79,6 +80,7 @@ namespace GXPEngine
             {
                 MyGame myGame = (MyGame)game;
                 myGame.enemies.Remove(this);
+                myGame.score++;
                 LateDestroy();
             }
 

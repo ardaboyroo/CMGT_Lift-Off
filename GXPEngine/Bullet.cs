@@ -4,18 +4,19 @@ using GXPEngine;
 
 namespace GXPEngine
 {
-    class Bullet : Sprite
+    class Bullet : AnimationSprite
     {
-        private int bulletSpeed = 10;
+        private int bulletSpeed;
         private GameObject player;
         private int direction;
 
-        public Bullet(GameObject player, int direction, string filename = "Assets/circle.png") : base(filename)
+        public Bullet(GameObject player, int direction, int bulletSpeed, string filename = "Assets/cannonball.png", int columns = 4, int rows = 1) : base(filename, columns, rows)
         {
             this.player = player;
             this.direction = direction;
+            this.bulletSpeed = bulletSpeed;
             SetOrigin(width / 2, height / 2);
-            scale = 0.25f;
+            //scale = 0.25f;
             x = player.x;
             y = player.y;
             CalculateRotation();

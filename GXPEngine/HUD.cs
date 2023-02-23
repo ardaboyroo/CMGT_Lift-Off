@@ -17,6 +17,7 @@ namespace GXPEngine
         StreamWriter writer;
         StreamReader reader;
         MyGame mygame;
+        AnimationSprite background;
 
         public HUD(int CASE)
         {
@@ -48,7 +49,14 @@ namespace GXPEngine
                     AddChild(scoreText);
                     break;
                 case 2:
-                    highScoreText.SetXY(MyGame.screenSize.x / 2, MyGame.screenSize.y / 2.5f);
+                    background = new AnimationSprite("Assets/EndScreen.png", 3, 1);
+                    AddChild(background);
+
+                    scoreText.SetXY(125, 50);
+                    scoreText.Text(string.Format("Score: {0}", mygame.score), true);
+                    AddChild(scoreText);
+                    Console.WriteLine("ADDED");
+                    highScoreText.SetXY(MyGame.screenSize.x - 175, 50);
                     AddChild(highScoreText);
                     break;
             }
@@ -56,14 +64,14 @@ namespace GXPEngine
 
         public void Update()
         {
-            Console.WriteLine(parent);
             if (mygame.player != null)
             {
                 if (mygame.player.isAlive)
                 {
-                    x = mygame.player.x + 200;
-                    y = mygame.player.y - 200;
-                    Console.WriteLine(x + " " + y);
+                    scoreText.x = mygame.player.x + 400;
+                    scoreText.y = mygame.player.y - 300;
+
+                    SetScore(mygame.score);
                 }
             }
         }
@@ -72,7 +80,7 @@ namespace GXPEngine
         {
             if (scoreText != null)
             {
-                scoreText.Text(String.Format("Kills: {0}", score), true);
+                scoreText.Text(String.Format("Score: {0}", score), true);
             }
         }
 

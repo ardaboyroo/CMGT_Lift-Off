@@ -12,8 +12,8 @@ namespace GXPEngine
         public int[,] map;
         //make map here
 
-        const int mapWidth = 15;
-        const int mapHeight = 25;
+        const int mapWidth = 25;
+        const int mapHeight = 50;
 
         AnimationSprite[,] mapSprites = new AnimationSprite[mapWidth, mapHeight];
 
