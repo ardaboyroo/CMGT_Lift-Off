@@ -14,17 +14,19 @@ namespace GXPEngine
         private int rotationSpeed = 5;      // negative for reversed rotation, positive for normal
         private int lastRotation = 0;
         public bool isAlive = true;
-        public int lives = 1;
+        public int lives = 3;
         public bool shot = false;
         private int[,] map;
         private MyGame _myGame;
         private float boostTimer = 1000;
         private float time;
+        private int timer;
+        private int timer2;
+        private bool dead = false;
 
         public Player(string filename = "Assets/Player_Sprites.png", int columns = 17, int rows = 1) : base(filename, columns, rows)
         {
             SetOrigin(width / 2, height / 2);
-            SetCycle(1, 8);
             scale = 0.5f;
             x = 1000;
             y = 600;
@@ -48,25 +50,38 @@ namespace GXPEngine
         {
             if (shot)
             {
-                Animate();
-                shot = false;
+                if (timer > 75)
+                {
+                    timer = 0;
 
-                //if (currentFrame != 8)
-                //{
-                //    currentFrame++;
-                //}
-                //else
-                //{
-                //    currentFrame = 0;
-                //    shot = false;
-                //}
+                    if (currentFrame != 8)
+                    {
+                        currentFrame++;
+                    }
+                    else
+                    {
+                        currentFrame = 0;
+                        shot = false;
+                    }
+                }
+                timer += Time.deltaTime;
             }
         }
 
-        private bool PlayerDeathAnim()
+        private void PlayerDeathAnim()
         {
-            return true;
+            if (timer2 > 100)
+            {
+                timer2 = 0;
+                if (currentFrame < 16)
+                {
+                    currentFrame++;
+                }
+            }
+
+            timer2 += Time.deltaTime;
         }
+
         public void Update()
         {
             // Move the player based on its current rotation
@@ -156,7 +171,17 @@ namespace GXPEngine
             // Lose game:
             if (lives <= 0)
             {
-                isAlive = false;
+                if (!dead)
+                {
+                    dead = true;
+                    currentFrame = 9;
+                    _myGame.shipSinking.Play();
+                }
+                PlayerDeathAnim();
+                if (currentFrame >= 16)
+                {
+                    isAlive = false;
+                }
             }
         }
 

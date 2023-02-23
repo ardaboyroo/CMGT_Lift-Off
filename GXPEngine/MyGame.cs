@@ -6,10 +6,11 @@ using System.IO.Ports;
 using GXPEngine.GXPEngine.Utils;
 using GXPEngine.Core;
 using TiledMapParser;
+using System.Threading;
 
 public class MyGame : Game
 {
-    private int enemyBulletSpeed = 5; 
+    private int enemyBulletSpeed = 5;
 
     ArduinoInput arduinoInput = new ArduinoInput();
 
@@ -23,7 +24,12 @@ public class MyGame : Game
     private int playerTimer = 0;
     private int playerShootCooldown = 1000; // in ms
 
+    private Sound cannonSFX;
+    private Sound menuMusic;
+    public Sound shipSinking;
+
     private bool gameStarted = false;
+    private bool init0 = false;
 
     public Player player;
     NewTerrain terrain;
@@ -59,6 +65,11 @@ public class MyGame : Game
     {
         DestroyAll();
 
+        init0 = true;
+
+        LoadAllSounds();
+        menuMusic.Play();
+
         AddChild(new Sprite("Assets/Start_Menu_Background.png"));
         AddChild(new HUD(currentScene));
     }
@@ -69,6 +80,7 @@ public class MyGame : Game
         DestroyAll();
 
         gameStarted = true;
+        init0 = false;
 
         terrain = new NewTerrain();
         AddChild(terrain);
@@ -112,10 +124,18 @@ public class MyGame : Game
         }
     }
 
+    private void LoadAllSounds()
+    {
+        cannonSFX = new Sound("Assets/CannonSFX.mp3");
+        menuMusic = new Sound("Assets/Menu music.mp3", true);
+        shipSinking = new Sound("Assets/ShipSinking.mp3");
+    }
+
     private void Shoot(GameObject obj, int bulletSpeed = 10)
     {
         AddChild(new Bullet(obj, -1, bulletSpeed));
         AddChild(new Bullet(obj, 1, bulletSpeed));
+        cannonSFX.Play();
     }
 
     // For every game object, Update is called every frame, by the engine:
@@ -145,7 +165,10 @@ public class MyGame : Game
         switch (currentScene)
         {
             case 0:
-                Init0();
+                if (!init0)
+                {
+                    Init0();
+                }
                 switchClick();
                 break;
             case 1:
@@ -186,6 +209,8 @@ public class MyGame : Game
             {
                 if (timer > 1000)
                 {
+                    thisEnemy.shot = true;
+                    thisEnemy.currentFrame = 0;
                     Shoot(thisEnemy, enemyBulletSpeed);
                     timer = 0;
                 }

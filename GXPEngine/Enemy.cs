@@ -13,6 +13,7 @@ namespace GXPEngine
         public int lives = 1;
         private bool dead = false;
         private int timer = 0;
+        public bool shot = false;
 
         public Enemy(Player player, int x, int y, string filename = "Assets/smallship.png", int columns = 17, int rows = 1) : base(filename, columns, rows)
         {
@@ -24,6 +25,7 @@ namespace GXPEngine
             _enemySpawner = new EnemySpawner(player);
             MyGame myGame = (MyGame)game;
             myGame.enemies.Add(this);
+            currentFrame = 9;
             //Console.WriteLine("Spawned at: " + x + " : " + y);
         }
 
@@ -56,8 +58,52 @@ namespace GXPEngine
             rotation += 90;
         }
 
+        public void CannonAnim()
+        {
+            if (dead)
+            {
+                Console.WriteLine("returned");
+                return;
+            }
+            Console.WriteLine("or not");
+            if (shot)
+            {
+                if (timer > 400)
+                {
+                    timer = 0;
+                    if (currentFrame <= 8)
+                    {
+                        currentFrame++;
+                    }
+                    else
+                    {
+                        currentFrame = 9;
+                        shot = false;
+                    }
+                }
+
+                timer += Time.deltaTime;
+
+            }
+        }
+
+        private void DeathAnim()
+        {
+            if (timer > 75)
+            {
+                timer = 0;
+                if (currentFrame < 16)
+                {
+                    currentFrame++;
+                }
+            }
+
+            timer += Time.deltaTime;
+        }
+
         public void Update()
         {
+            CannonAnim();
             CheckStopped();
             if (!stopped)
             {
@@ -68,7 +114,7 @@ namespace GXPEngine
             {
                 CalculateRotateCannon();
             }
-            
+
 
             if (Input.GetKey(Key.K))
             {
@@ -79,12 +125,22 @@ namespace GXPEngine
             if (lives <= 0)
             {
                 MyGame myGame = (MyGame)game;
-                myGame.enemies.Remove(this);
-                myGame.score++;
-                LateDestroy();
+                if (!dead)
+                {
+                    dead = true;
+                    currentFrame = 10;
+                }
+                DeathAnim();
+                if (currentFrame >= 16)
+                {
+                    myGame.enemies.Remove(this);
+                    myGame.score++;
+                    myGame.shipSinking.Play();
+                    LateDestroy();
+                }
             }
 
-            
+
         }
     }
 }
